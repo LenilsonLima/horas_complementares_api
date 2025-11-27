@@ -2,7 +2,7 @@
   "name": "api_project",
   "version": "1.0.0",
   "description": "api para projeto de conclusão de curso TSI",
-  "main": "index.js",
+  "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "nodemon server.js"
