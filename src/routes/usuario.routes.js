@@ -1,10 +1,12 @@
 const express = require('express');
 const routes = express.Router();
 
-const usuarioController =  require("../controllers/usuario-controllers.js");
-const login  = require("../middleware/login.js");
+const usuarioController = require("../controllers/usuario-controllers.js");
+const login = require("../middleware/login.js");
 
 routes.get('/', login.obrigatorioLogin, usuarioController.getUsuario);
+routes.get('/auth', login.obrigatorioLogin, usuarioController.getUseAuth);
+routes.get('/logout', usuarioController.getLogout);
 routes.get('/:id', login.obrigatorioLogin, usuarioController.getOneUsuario);
 routes.post('/', login.opcionalLogin, usuarioController.postUsuario);
 routes.post('/login/adm', usuarioController.postUsuarioLoginAdm);

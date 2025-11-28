@@ -4,7 +4,7 @@ const executeQuery = require('../../pgsql.js');
 exports.getCursos = async (req, res, next) => {
     try {
         const pagina = parseInt(req.query.page) || 1;  // Página atual, padrão é 1
-        const registrosPorPagina = parseInt(req.query.limit) || 10;  // Registros por página, padrão é 10
+        const registrosPorPagina = parseInt(req.query.limit) || 9999999999;  // Registros por página, padrão é 10
 
         // Calcula o offset para a consulta
         const offset = (pagina - 1) * registrosPorPagina;

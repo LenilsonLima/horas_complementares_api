@@ -684,3 +684,86 @@ exports.deleteUsuario = async (req, res, next) => {
         });
     }
 }
+
+
+exports.getUseAuth = async (req, res, next) => {
+    try {
+        const usuario = { usuario_id: req.usuario.usuario_id }
+        if (!usuario?.usuario_id) {
+            res.status(404).send({
+                retorno: {
+                    status: 404,
+                    mensagem: `Usuário não foi localizado`,
+                },
+                registros: registros,
+            });
+            return
+        }
+        const registros = await executeQuery(
+            'SELECT * FROM usuarios WHERE id = $1',
+            [usuario?.usuario_id]
+        );
+
+
+        if (registros.length < 1) {
+            res.status(404).send({
+                retorno: {
+                    status: 404,
+                    mensagem: `Usuário não foi localizado`,
+                },
+                registros: registros,
+            });
+            return
+        }
+
+        // Remover o campo 'senha' de cada objeto
+        registros = registros?.map(({ senha, ...resto }) => { return resto });
+
+        res.status(200).send({
+            retorno: {
+                status: 200,
+                mensagem: 'Sucesso ao consultar dados',
+            },
+            registros: registros,
+        });
+    } catch (error) {
+        console.error("Erro ao consultar dados:", error);
+
+        res.status(500).send({
+            retorno: {
+                status: 500,
+                mensagem: 'Erro ao consultar dados, tente novamente',
+            },
+            registros: [],
+        });
+    }
+};
+
+exports.getLogout = (req, res, next) => {
+    try {
+        res.clearCookie('token', {
+            httpOnly: true,
+            secure: true,
+            sameSite: 'none',
+            path: '/'
+        });
+
+        res.status(200).send({
+            retorno: {
+                status: 200,
+                mensagem: 'Logout realizado com sucesso',
+            },
+            registros: [],
+        });
+    } catch (error) {
+        console.error("Erro ao logout:", error);
+
+        res.status(500).send({
+            retorno: {
+                status: 500,
+                mensagem: 'Erro ao logout, tente novamente',
+            },
+            registros: [],
+        });
+    }
+};

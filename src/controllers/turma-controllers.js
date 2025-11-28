@@ -8,7 +8,7 @@ exports.getTurmas = async (req, res, next) => {
 
         // Verifica se os parâmetros de página e limite são válidos
         const pagina = page ? parseInt(page) : 1; // Página atual, padrão é 1
-        const limite = limit ? parseInt(limit) : 10; // Limite de registros por página, padrão é 10
+        const limite = limit ? parseInt(limit) : 9999999999; // Limite de registros por página, padrão é 10
 
         console.log(`Página: ${pagina}, Limite: ${limite}`);
 

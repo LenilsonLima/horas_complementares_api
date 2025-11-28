@@ -26,16 +26,11 @@ exports.postPdf = async (req, res, next) => {
         const filePath = req.file.path;
         const fileName = path.basename(filePath);
         const fileStream = fs.createReadStream(filePath);
-        const created_at = new Date();
 
         const usuario = {
             id: req.usuario?.usuario_id,
             descricao: req.body.descricao,
-            data_emissao: req.body.data_emissao,
-            validade: req.body.validade,
-            status: 0,
-            created_at: created_at,
-            updated_at: created_at,
+            status: 0
         }
         console.log(usuario);
 
@@ -55,8 +50,8 @@ exports.postPdf = async (req, res, next) => {
 
         // Inserir o URL no banco de dados
         const result = await executeQuery(
-            'INSERT INTO certificados (descricao, s3_url, data_emissao, validade, status, created_at, updated_at, usuario_id) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *',
-            [usuario?.descricao, s3_url, usuario?.data_emissao, usuario?.validade, usuario?.status, created_at, created_at, usuario.id]
+            'INSERT INTO certificados (descricao, s3_url, status, usuario_id) VALUES ($1, $2, $3, $4) RETURNING *',
+            [usuario?.descricao, s3_url, usuario?.status, usuario.id]
         );
 
         // Remover o arquivo local após o envio bem-sucedido
@@ -97,11 +92,10 @@ exports.postPdf = async (req, res, next) => {
 exports.updatePdf = async (req, res, next) => {
     try {
         const { id } = req.params; // ID do registro no banco de dados
+        const updated_at = new Date();
         const usuario = {
             id: req.usuario?.usuario_id,
-            descricao: req.body?.descricao,
-            data_emissao: req.body?.data_emissao,
-            validade: req.body?.validade
+            descricao: req.body?.descricao
         };
 
         if (!req.file) {
@@ -153,11 +147,10 @@ exports.updatePdf = async (req, res, next) => {
         }
 
         // Atualizar o banco de dados
-        const updated_at = new Date();
         const newS3Url = `https://project-tsi.s3.us-east-2.amazonaws.com/${params.Key}`;
         await executeQuery(
-            'UPDATE certificados SET s3_url = $1, descricao = $2, data_emissao = $3, validade = $4, updated_at = $5 WHERE id = $6 and usuario_id = $7',
-            [newS3Url, usuario?.descricao, usuario?.data_emissao, usuario?.validade, updated_at, id, usuario?.id]
+            'UPDATE certificados SET s3_url = $1, descricao = $2, updated_at = $3 WHERE id = $4 and usuario_id = $5',
+            [newS3Url, usuario?.descricao, updated_at, id, usuario?.id]
         );
 
         // Remover o arquivo local após o envio
