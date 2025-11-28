@@ -358,7 +358,7 @@ exports.postUsuarioLoginAluno = async (req, res, next) => {
                 httpOnly: true,
                 secure: true,
                 maxAge: 48 * 60 * 60 * 1000,
-                sameSite: 'None',
+                sameSite: 'none',
                 path: '/'
             });
 
@@ -445,7 +445,7 @@ exports.postUsuarioLoginAdm = async (req, res, next) => {
                 httpOnly: true,
                 secure: true, // Somente em produção, se HTTPS estiver habilitado
                 maxAge: 48 * 60 * 60 * 1000, // Expira em 48 horas
-                sameSite: 'None',
+                sameSite: 'none',
                 path: '/'
             });
 
